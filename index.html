@@ -9,6 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600&display=swap" rel="stylesheet">
     <meta name="theme-color" content="#ffeff3">
     <link rel="manifest" href="manifest.json">
+    <!-- Swiper.js CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <style>
         /* 
          * [CSS 스타일 정의]
@@ -25,6 +28,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -37,7 +41,9 @@
 
         .main-img {
             opacity: 0;
-            animation: fadeInMain 2s ease forwards;
+            animation: fadeInMain 2.5s ease forwards;
+            animation-delay: 1s;
+            /* 드레스가 열리기 시작한 후 나타나도록 지연 */
         }
 
         @keyframes fadeInMain {
@@ -58,6 +64,145 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             position: relative;
             min-height: 100vh;
+            display: none;
+        }
+
+        /* [웨딩드레스(Wedding Dress) 오프닝 시스템] */
+        #dress-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2000;
+            display: flex;
+            cursor: pointer;
+            overflow: hidden;
+            background-color: #f7f5f2;
+            perspective: 2000px;
+        }
+
+        .dress-portion {
+            position: absolute;
+            top: 0;
+            width: 50.5%;
+            height: 100%;
+            background: #fff;
+            /* 고급 실크/새틴 광택 처리 */
+            background-image:
+                linear-gradient(105deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.8) 20%, rgba(255, 255, 255, 0) 40%),
+                linear-gradient(90deg, #fff 0%, #f9f7f4 100%);
+            box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.02);
+            /* 중앙에서 부드럽게 열리는 애니메이션 (2.5초) */
+            transition: transform 2.5s cubic-bezier(0.25, 0.1, 0.25, 1),
+                opacity 2s ease,
+                filter 2s ease;
+            overflow: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 하단 물결무늬 레이스 (Wave Lace) */
+        .dress-portion::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 200px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23f0ede9' fill-opacity='0.6' d='M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3Cpath fill='%23ffffff' fill-opacity='1' d='M0,224L48,213.3C96,203,192,181,288,192C384,203,480,245,576,234.7C672,224,768,160,864,138.7C960,117,1056,139,1152,149.3C1248,160,1344,160,1392,160L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: repeat-x;
+            background-size: 100% 120px;
+            z-index: 1;
+            filter: drop-shadow(0 -5px 15px rgba(0, 0, 0, 0.03));
+        }
+
+        /* 드레스 중앙 진주 버튼 라인 */
+        .dress-portion::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 24px;
+            height: 100%;
+            background-image: radial-gradient(circle, #f0ede9 3px, transparent 4px);
+            background-size: 24px 50px;
+            background-position: center;
+            opacity: 0.8;
+            z-index: 2;
+        }
+
+        .dress-portion.left::before {
+            right: -12px;
+        }
+
+        .dress-portion.right::before {
+            left: -12px;
+        }
+
+        .dress-portion.left {
+            left: 0;
+            transform-origin: center left;
+            border-right: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .dress-portion.right {
+            right: 0;
+            transform-origin: center right;
+            border-left: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        /* 오프닝 애니메이션: 드레스가 중앙에서 양옆으로 시원하게 펼쳐짐 */
+        .dress-opened .left {
+            transform: rotateY(-115deg) translateZ(100px) translateX(-5%);
+            opacity: 0;
+            filter: blur(3px);
+        }
+
+        .dress-opened .right {
+            transform: rotateY(115deg) translateZ(100px) translateX(5%);
+            opacity: 0;
+            filter: blur(3px);
+        }
+
+        /* 가이드 문구 위치 조정 */
+        .dress-guide {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 2001;
+            transition: opacity 1s;
+        }
+
+        .dress-opened .dress-guide {
+            opacity: 0;
+        }
+
+        .dress-guide p {
+            color: #888;
+            border: 1px solid #eee;
+            padding: 10px 20px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+            letter-spacing: 5px;
+            font-size: 0.8rem;
+            font-weight: 300;
+            animation: breathe 3s infinite ease-in-out;
+        }
+
+        @keyframes breathe {
+
+            0%,
+            100% {
+                opacity: 0.3;
+            }
+
+            50% {
+                opacity: 1;
+            }
         }
 
         /* 
@@ -175,7 +320,9 @@
             justify-content: center;
             align-items: center;
             opacity: 0;
-            transition: opacity 1.5s ease;
+            transition: opacity 2.5s ease;
+            transition-delay: 1.0s;
+            /* 사진이 나타난 후 글씨가 나오도록 지연 */
         }
 
         /* 하트 모양 배경 */
@@ -487,22 +634,6 @@
         }
 
         /* ===== 음악 버튼 ===== */
-        .music-toggle {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            width: 36px;
-            height: 36px;
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 16px;
-            cursor: pointer;
-            z-index: 5;
-        }
 
         .title-overlay-typewriter {
             display: inline-block;
@@ -530,7 +661,7 @@
             }
 
             50% {
-                border-color: rgb(255, 255, 255)
+                border-color: rgb(255, 255, 255, 0)
             }
         }
 
@@ -562,13 +693,75 @@
             max-height: 90%;
             border-radius: 8px;
         }
+
+        /* Swiper Custom Styles */
+        .swiper {
+            width: 100%;
+            height: 100%;
+        }
+
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: transparent;
+        }
+
+        .swiper-slide img {
+            max-width: 95%;
+            max-height: 85vh;
+            object-fit: contain;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .swiper-button-next,
+        .swiper-button-prev {
+            color: #fff;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+        }
+
+        .swiper-pagination-bullet {
+            background: #fff;
+            opacity: 0.5;
+        }
+
+        .swiper-pagination-bullet-active {
+            background: #fff;
+            opacity: 1;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #fff;
+            font-size: 30px;
+            cursor: pointer;
+            z-index: 10002;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+            line-height: 1;
+        }
     </style>
 </head>
 
 <body>
-   <audio id="bgm" loop playsinline>
-    <source src="music.mp3" type="audio/mpeg">
-</audio>
+    <!-- [웨딩드레스 오프닝 시스템] -->
+    <div id="dress-overlay" onclick="openWedding()">
+        <div class="dress-portion left"></div>
+        <div class="dress-portion right"></div>
+        <div class="dress-guide" id="dress-guide">
+            <p>TOUCH TO OPEN<br>결혼식으로 초대합니다.</p>
+        </div>
+    </div>
+    <audio id="bgm" loop playsinline>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
 
     <div id="petal-container"></div>
 
@@ -582,7 +775,6 @@
                     <span class="title-overlay-typewriter">서로의 인연이 되어<br>평생을 함께하려 합니다.</span>
 
                 </div>
-                <div class="music-toggle" onclick="toggleMusic()">♪</div>
             </div>
         </header>
 
@@ -638,70 +830,72 @@
                 주소: 경기 광명시 양지로 17 AK플라자 광명점 5층</p>
             <div id="map"
                 style="width: 100%; height: 300px; margin-top: 20px; border: 1px solid #ddd; border-radius: 5px;"></div>
-                  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=62ea259317c7f5a899f1cb2c8e5f6e68&autoload=false&libraries=services"></script>
-<script>
-function initMap() {
+            <script
+                src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=62ea259317c7f5a899f1cb2c8e5f6e68&autoload=false&libraries=services"></script>
+            <script>
+                function initMap() {
 
-    if (typeof kakao === "undefined") {
-        console.error("Kakao SDK not loaded");
-        return;
-    }
+                    if (typeof kakao === "undefined") {
+                        console.error("Kakao SDK not loaded");
+                        return;
+                    }
 
-    kakao.maps.load(function () {
+                    kakao.maps.load(function () {
 
-        var mapContainer = document.getElementById('map');
+                        var mapContainer = document.getElementById('map');
 
-        var mapOption = {
-            center: new kakao.maps.LatLng(37.4786, 126.8665),
-            level: 3
-        };
+                        var mapOption = {
+                            center: new kakao.maps.LatLng(37.4786, 126.8665),
+                            level: 3
+                        };
 
-        var map = new kakao.maps.Map(mapContainer, mapOption);
+                        var map = new kakao.maps.Map(mapContainer, mapOption);
 
-        var geocoder = new kakao.maps.services.Geocoder();
-        var address = '경기 광명시 양지로 17 AK플라자 광명점 5층';
+                        var geocoder = new kakao.maps.services.Geocoder();
+                        var address = '경기 광명시 양지로 17 AK플라자 광명점 5층';
 
-        geocoder.addressSearch(address, function (result, status) {
-            if (status === kakao.maps.services.Status.OK) {
+                        geocoder.addressSearch(address, function (result, status) {
+                            if (status === kakao.maps.services.Status.OK) {
 
-                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
-                var marker = new kakao.maps.Marker({
-                    map: map,
-                    position: coords
-                });
+                                var marker = new kakao.maps.Marker({
+                                    map: map,
+                                    position: coords
+                                });
 
-                map.setCenter(coords);
-            }
-        });
-    });
-}
+                                map.setCenter(coords);
+                            }
+                        });
+                    });
+                }
 
 
             </script>
-            <p style="font-size: 0.8rem; color: #888; margin-top: 10px;">
+            <p style="font-size: 0.8rem; color: #888; position: left; margin-top: 10px;">
                 🚗 자가용<br>
                 네비게이션: "아이벡스컨벤션"<br>
                 주소검색: "경기 광명시 일직동 512-3" 입력<br>
                 U플래닛(AK플라자)주차장 B3-B8<br>
                 * 주차 공간이 협소할 수 있으니 대중교통 이용을 권장합니다.<br>
                 <br>
-                     🚂 지하철<br>
-            1호선 광명역(영등포 <-> 광명역) 1번, 3번 출구 도보 5분<br>
-           <br>
-                🚌 버스 <br>
-                광명역데시앙, 일직동행정복지센터 정류장 하차 <br>
-                -> AK 플라자 바로 앞<br>
-                일반, 지선, 마을: 8-2, 22, 50, 200, 5627, 5633, 1-1, 1-3<br>
-                광역: 8507
-                </p>
+                🚂 지하철<br>
+                1호선 광명역(영등포 <-> 광명역) 1번, 3번 출구 도보 5분<br>
+                    <br>
+                    🚌 버스 <br>
+                    광명역데시앙, 일직동행정복지센터 정류장 하차 <br>
+                    -> AK 플라자 바로 앞<br>
+                    일반, 지선, 마을: 8-2, 22, 50, 200, 5627, 5633, 1-1, 1-3<br>
+                    광역: 8507
+            </p>
         </section>
 
         <!-- 4. 마음 전하실 곳 섹션 -->
         <section class="account-section reveal">
             <h2>마음 전하실 곳</h2>
             <div class="account-message">
-                멀리서도 축하의 마음을 전하고 싶으신 분들을위해<br>
+                멀리서도 축하의 마음을 <br>
+                전하고 싶으신 분들을 위해<br>
                 계좌번호를 안내드립니다.<br><br>
                 소중한 축하를 보내주셔서 감사드리며,<br>
                 따뜻한 마음에 깊이 감사드립니다.
@@ -794,8 +988,20 @@ function initMap() {
                 </div>
             </div>
         </section>
-        <div id="imageModal" onclick="closeModal()">
-            <img id="modalImg">
+        <div id="imageModal">
+            <div class="modal-close-btn" onclick="closeModal()">&times;</div>
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="images/main.jpg" alt="웨딩사진1"></div>
+                    <div class="swiper-slide"><img src="images/background (4).jpg" alt="웨딩사진2"></div>
+                    <div class="swiper-slide"><img src="images/background (3).jpg" alt="웨딩사진3"></div>
+                    <div class="swiper-slide"><img src="images/background (1).jpg" alt="웨딩사진4"></div>
+                    <div class="swiper-slide"><img src="images/background (2).jpg" alt="웨딩사진5"></div>
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-pagination"></div>
+            </div>
         </div>
 
         <!-- 푸터 -->
@@ -813,6 +1019,26 @@ function initMap() {
                     .catch((err) => console.log('Service Worker Failed', err));
             });
         }
+        // [핵심 기능: 웨딩드레스 열기]
+        function openWedding() {
+            const overlay = document.getElementById('dress-overlay');
+            const guide = document.getElementById('dress-guide');
+            const bgm = document.getElementById('bgm');
+            const content = document.querySelector('.container');
+
+            guide.style.opacity = '0';
+            overlay.classList.add('dress-opened');
+            bgm.play().catch(() => { });
+
+            content.style.display = 'block';
+            document.body.style.overflow = 'auto';
+
+            // 드레스 애니메이션 시간 2.5초에 맞춰 제거
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 2500);
+        }
+
         // 1. 스크롤 애니메이션: 화면에 요소가 보이면 .active 클래스 추가하여 애니메이션 실행
         document.addEventListener("DOMContentLoaded", function () {
             const reveals = document.querySelectorAll(".reveal");
@@ -839,6 +1065,7 @@ function initMap() {
         // 2. 벚꽃(꽃잎) 애니메이션 기능
         function createPetal() {
             const container = document.getElementById("petal-container");
+            if (!container) return;
             const petal = document.createElement("div"); // 새로운 div 생성
             petal.classList.add("petal"); // class="petal" 추가
 
@@ -945,14 +1172,13 @@ function initMap() {
 
             document.getElementById("calendar").innerHTML = calendarHTML;
         }
-generateCalendar(weddingDate);
+        generateCalendar(weddingDate);
         function updateCountdown() {
             const now = new Date();
             const gap = weddingDate - now;
 
             if (gap <= 0) {
-                document.getElementById("countdown").innerHTML =
-                    "<div style='margin-bottom:15px;'>💐 오늘입니다</div>";
+                // document.getElementById("countdown").innerHTML = "<div style='margin-bottom:15px;'>💐 오늘입니다</div>";
                 return;
             }
 
@@ -961,63 +1187,73 @@ generateCalendar(weddingDate);
             const minutes = Math.floor((gap / (1000 * 60)) % 60);
             const seconds = Math.floor((gap / 1000) % 60);
 
-            document.getElementById("countdown").innerHTML =
-                `<div style="
-            font-size:0.95rem;
-            margin-bottom:20px;
-            color:#666;
-            letter-spacing:1px;
-        ">
-            ${days}일 ${hours}시간 ${minutes}분 ${seconds}초
-        </div>`;
+            // document.getElementById("countdown").innerHTML = `<div style="font-size:0.95rem; margin-bottom:20px; color:#666; letter-spacing:1px; "> ${days}일 ${hours}시간 ${minutes}분 ${seconds}초 </div>`;
         }
 
         setInterval(updateCountdown, 1000);
         updateCountdown();
-       
-        /* ===== 음악 자동 재생 보완 ===== */
+
+        /* ===== 갤러리 슬라이더 로직 ===== */
+        let swiper;
+
         document.addEventListener("DOMContentLoaded", function () {
- // 갤러리 클릭 이벤트 연결
-        document.querySelectorAll(".gallery-item img").forEach(img => {
-            img.addEventListener("click", function () {
-                const modal = document.getElementById("imageModal");
-                const modalImg = document.getElementById("modalImg");
-
-                modal.style.display = "flex";
-                modalImg.src = this.src;
+            // Swiper 초기화
+            swiper = new Swiper(".mySwiper", {
+                loop: true,
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
             });
-        });
 
+            // 갤러리 아이템 클릭 시 모달 열기 및 해당 슬라이드로 이동
+            const galleryItems = document.querySelectorAll(".gallery-item");
+            galleryItems.forEach((item, index) => {
+                item.addEventListener("click", function () {
+                    const modal = document.getElementById("imageModal");
+                    modal.style.display = "flex";
+                    document.body.style.overflow = 'hidden'; // 스크롤 방지
+
+                    // index + 1 (loop: true 일 경우 복제된 슬라이더 때문에 index 계산 필요할 수 있음)
+                    // 기본적으로 초기화 후 slideTo 사용
+                    swiper.slideToLoop(index, 0);
+                });
+            });
+
+            const audio = document.getElementById("bgm");
+            let hasPlayed = false;
+
+            function playAudio() {
+                if (!hasPlayed) {
+                    audio.play().then(() => {
+                        hasPlayed = true;
+                    }).catch(() => {
+                        console.log("자동재생 차단");
+                    });
+                }
+            }
+
+            window.addEventListener("scroll", playAudio, { once: true });
+            window.addEventListener("touchstart", playAudio, { once: true });
+
+        });
+        function toggleMusic() {
+            const audio = document.getElementById("bgm");
+
+            if (audio.paused) {
+                audio.play().catch(() => { });
+            } else {
+                audio.pause();
+            }
+        }
         function closeModal() {
             document.getElementById("imageModal").style.display = "none";
+            document.body.style.overflow = 'auto'; // 스크롤 복원
         }
-
-    const audio = document.getElementById("bgm");
-    let hasPlayed = false;
-
-    function playAudio() {
-        if (!hasPlayed) {
-            audio.play().then(() => {
-                hasPlayed = true;
-            }).catch(() => {
-                console.log("자동재생 차단");
-            });
-        }
-    }
-
-    window.addEventListener("scroll", playAudio, { once: true });
-    window.addEventListener("touchstart", playAudio, { once: true });
-
-});
-      function toggleMusic() {
-    const audio = document.getElementById("bgm");
-
-    if (audio.paused) {
-        audio.play().catch(() => {});
-    } else {
-        audio.pause();
-    }
-}
         // 계좌번호 토글 기능
         function showAccount(side) {
             const groomList = document.getElementById('groom-accounts');
@@ -1050,15 +1286,3 @@ generateCalendar(weddingDate);
     </script>
 
 </body>
-
-
-</html>
-
-
-
-
-
-
-
-
-
