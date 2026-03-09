@@ -1203,13 +1203,12 @@
         const swiperWrapper = document.getElementById("swiperWrapper");
         const loadMoreBtn = document.getElementById("loadMoreBtn");
 
-        const totalImages = 32;
+        const totalImages = 30;
         const firstVisible = 8;
 
         // 슬라이드 생성 (미리 40장 모두 생성하여 슬라이더 인덱스 불일치 해결)
         function createSwiperSlide(i) {
             let imgPath = `images/background (${i}).jpg`;
-            if (i === 1) imgPath = `images/main.jpg`;
 
             const slide = document.createElement("div");
             slide.className = "swiper-slide";
@@ -1232,7 +1231,6 @@
         // 썸네일 생성
         function createThumbnail(i) {
             let imgPath = `images/background (${i}).jpg`;
-            if (i === 1) imgPath = `images/main.jpg`;
 
             const galleryItem = document.createElement("div");
             galleryItem.className = "gallery-item";
