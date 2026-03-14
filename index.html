@@ -33,11 +33,13 @@
             --bg-white: #ffffff;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
+        * { margin: 0;
             padding: 0;
+            box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+           input, textarea {
+    -webkit-user-select: auto;
+    user-select: auto;
         }
 
         body {
@@ -1611,11 +1613,16 @@
             alert("계좌번호가 복사되었습니다.");
         }
 
-        // 방명록 모달 열기
-        function openGuestbook() {
-            document.getElementById("guestbookModal").style.display = "flex";
-            document.body.style.overflow = 'hidden'; // 뒤쪽 배경 스크롤 방지
-        }
+        // 방명록 열기
+function openGuestbook() {
+    document.getElementById("guestbookModal").style.display = "flex";
+    document.body.style.overflow = 'hidden'; // 뒤쪽 배경 스크롤 방지
+    
+    // 모바일 환경을 배려하여 모달이 열린 직후 첫 번째(이름) 입력창에 포커스를 줍니다.
+    setTimeout(() => {
+        document.getElementById("guestName").focus();
+    }, 100);
+}
         // 방명록 닫기 (이 함수를 window에 붙여야 외부 module에서 접근할 수 있습니다)
         window.closeGuestbook = function () {
             document.getElementById("guestbookModal").style.display = "none";
