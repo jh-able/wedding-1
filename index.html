@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>김희윤 ❤️ 김슬기, 당신을 초대합니다</title>
-<!-- Social Media Metadata (Open Graph) -->
-<meta property="og:title" content="김희윤 ❤️ 김슬기, 당신을 초대합니다">
-<meta property="og:description" content="2026년 5월 23일 토요일 오후 3시 ">
-<meta property="og:image" content="wedd.png">
-<meta property="og:type" content="website">
+    <!-- Social Media Metadata (Open Graph) -->
+    <meta property="og:title" content="김희윤 ❤️ 김슬기, 당신을 초대합니다">
+    <meta property="og:description" content="2026년 5월 23일 토요일 오후 3시 ">
+    <meta property="og:image" content="wedd.png">
+    <meta property="og:type" content="website">
     <!-- 폰트 및 CDN 최적화 (버퍼링 감소를 위한 Preconnect) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -792,6 +792,47 @@
             border-radius: 50%;
             line-height: 1;
         }
+
+        .guestbook-list {
+            max-width: 440px;
+            margin: 0 auto 20px auto;
+            text-align: left;
+            padding: 0 10px;
+        }
+
+        .guestbook-entry {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+        }
+
+        .guestbook-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .guestbook-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        .guestbook-date {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .guestbook-message {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
     </style>
 </head>
 
@@ -1033,28 +1074,190 @@
                 <div class="swiper-pagination"></div>
             </div>
         </div>
-     <!-- 6. 방명록 섹션 -->
+        <!-- 6. 방명록 섹션 -->
         <section class="guestbook reveal">
             <h2>방명록</h2>
             <p>두 사람의 새로운 출발을 축하해 주세요!</p>
+            <div class="guestbook-list" id="guestbookList">
+                <!-- Javascript에서 Firebase 데이터를 불러와 여기에 추가합니다. -->
+                <div style="text-align: center; padding: 20px; color: #888; font-size: 0.9rem;">
+                    불러오는 중...
+                </div>
+            </div>
             <button class="toggle-btn active" onclick="openGuestbook()" style="margin-top: 15px;">방명록 남기기</button>
         </section>
 
         <!-- 푸터 -->
         <footer>
-<p>저희의 결혼식을 축하해주셔서 감사합니다.</p>
+            <p>저희의 결혼식을 축하해주셔서 감사합니다.</p>
         </footer>
     </div>
-<!-- 방명록 모달창 -->
-    <div id="guestbookModal" style="display: none; position: fixed; z-index: 10005; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center;">
-        <div style="background: white; padding: 30px; border-radius: 12px; width: 80%; max-width: 400px; text-align: center; position: relative;">
-            <div onclick="closeGuestbook()" style="position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #555;">&times;</div>
+    <!-- 방명록 모달창 -->
+    <div id="guestbookModal"
+        style="display: none; position: fixed; z-index: 10005; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center;">
+        <div
+            style="background: white; padding: 30px; border-radius: 12px; width: 80%; max-width: 400px; text-align: center; position: relative;">
+            <div onclick="closeGuestbook()"
+                style="position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: #555;">
+                &times;</div>
             <h3 style="margin-bottom: 20px; color: #788374;">축하 메시지 남기기</h3>
-            <input type="text" id="guestName" placeholder="이름" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
-            <textarea id="guestMessage" rows="4" placeholder="축하의 말씀을 남겨주세요." style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px; resize: none; box-sizing: border-box;"></textarea>
-            <button onclick="submitGuestbook()" style="background: #788374; color: white; padding: 10px 20px; border: none; border-radius: 20px; width: 100%; cursor: pointer;">등록하기</button>
+            <input type="text" id="guestName" placeholder="이름"
+                style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+            <input type="password" id="guestPassword" placeholder="비밀번호 4자리 (수정/삭제용)" maxlength="4"
+                style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+            <textarea id="guestMessage" rows="4" placeholder="축하의 말씀을 남겨주세요."
+                style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px; resize: none; box-sizing: border-box;"></textarea>
+            <button id="submitGuestbookBtn"
+                style="background: #788374; color: white; padding: 10px 20px; border: none; border-radius: 20px; width: 100%; cursor: pointer;">등록하기</button>
         </div>
     </div>
+
+    <!-- Firebase SDK (모듈 방식) -->
+    <script type="module">
+        // Firebase 모듈 import
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+        // 사용자가 제공한 Firebase 설정 정보
+        const firebaseConfig = {
+            apiKey: "AIzaSyBwaA8Y-C7SNbYqEaYVgMhU1xIvOEB5Fac",
+            authDomain: "wedding-guestbook-bb7df.firebaseapp.com",
+            projectId: "wedding-guestbook-bb7df",
+            storageBucket: "wedding-guestbook-bb7df.firebasestorage.app",
+            messagingSenderId: "1040794884685",
+            appId: "1:1040794884685:web:fb07e63bae5dd7939eda04"
+        };
+
+        // Firebase 초기화
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // 방명록 등록 이벤트 리스너 연결 (type="module" 안에서는 전역 함수 호출이 안되므로 여기서 직접 버튼에 이벤트 연결)
+        document.getElementById('submitGuestbookBtn').addEventListener('click', async () => {
+            const name = document.getElementById("guestName").value.trim();
+            const password = document.getElementById("guestPassword").value.trim();
+            const message = document.getElementById("guestMessage").value.trim();
+
+            if (!name || !password || !message) {
+                alert("이름, 비밀번호, 메시지를 모두 입력해 주세요!");
+                return;
+            }
+
+            if (password.length < 4) {
+                alert("비밀번호는 4자리로 입력해 주세요.");
+                return;
+            }
+
+            try {
+                const submitBtn = document.getElementById('submitGuestbookBtn');
+                submitBtn.disabled = true;
+                submitBtn.innerText = "등록 중...";
+
+                // Firestore에 데이터 저장
+                await addDoc(collection(db, "guestbooks"), {
+                    name: name,
+                    password: password,
+                    message: message,
+                    timestamp: serverTimestamp()
+                });
+
+                alert("방명록이 등록되었습니다. 감사합니다!");
+                window.closeGuestbook(); // window 객체에 바인딩된 모달 닫기 함수 호출
+
+                // 입력창 초기화
+                document.getElementById("guestName").value = "";
+                document.getElementById("guestPassword").value = "";
+                document.getElementById("guestMessage").value = "";
+
+            } catch (e) {
+                console.error("Error adding document: ", e);
+                alert("등록 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.");
+            } finally {
+                const submitBtn = document.getElementById('submitGuestbookBtn');
+                submitBtn.disabled = false;
+                submitBtn.innerText = "등록하기";
+            }
+        });
+
+        // 방명록 데이터 실시간 읽어오기
+        const guestbookList = document.getElementById('guestbookList');
+        const q = query(collection(db, "guestbooks"), orderBy("timestamp", "desc"));
+
+        onSnapshot(q, (snapshot) => {
+            if (snapshot.empty) {
+                guestbookList.innerHTML = '<div style="text-align: center; padding: 20px; color: #888; font-size: 0.9rem;">아직 등록된 축하 메시지가 없습니다.<br>첫 번째로 축하 메시지를 남겨주세요!</div>';
+                return;
+            }
+
+            guestbookList.innerHTML = ''; // 기존 목록 초기화
+
+            snapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                const id = docSnap.id;
+
+                // 날짜 포맷팅 (서버 타임스탬프가 아직 반영 안된 로컬 캐시 상태일 때는 현재 시간으로 표시)
+                let dateStr = "";
+                if (data.timestamp) {
+                    const date = data.timestamp.toDate();
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    dateStr = `${year}.${month}.${day}`;
+                } else {
+                    const date = new Date();
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    dateStr = `${year}.${month}.${day}`;
+                }
+
+                // 방명록 항목 HTML 생성
+                const entryHTML = `
+                    <div class="guestbook-entry">
+                        <div class="guestbook-header">
+                            <span class="guestbook-name">${data.name}</span>
+                            <div>
+                                <span class="guestbook-date">${dateStr}</span>
+                                <span style="font-size: 0.8rem; color: #ccc; cursor: pointer; margin-left: 5px;" onclick="window.deleteGuestbookEntry('${id}')">✕</span>
+                            </div>
+                        </div>
+                        <div class="guestbook-message">${data.message.replace(/\n/g, '<br>')}</div>
+                    </div>
+                `;
+                guestbookList.innerHTML += entryHTML;
+            });
+        }, (error) => {
+            console.error("Error fetching guestbook data:", error);
+            guestbookList.innerHTML = '<div style="text-align: center; padding: 20px; color: #e57373; font-size: 0.9rem;">데이터를 불러오는 중 오류가 발생했습니다.</div>';
+        });
+
+        // 삭제 함수 (window 객체에 할당하여 인라인 이벤트 리스너에서 호출 가능하게 함)
+        window.deleteGuestbookEntry = async (id) => {
+            const inputPassword = prompt("등록할 때 입력한 비밀번호 4자리를 입력하세요.");
+            if (!inputPassword) return;
+
+            try {
+                const docRef = doc(db, "guestbooks", id);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    if (docSnap.data().password === inputPassword) {
+                        if (confirm("정말 이 방명록을 삭제하시겠습니까?")) {
+                            await deleteDoc(docRef);
+                            alert("삭제되었습니다.");
+                        }
+                    } else {
+                        alert("비밀번호가 일치하지 않습니다.");
+                    }
+                } else {
+                    alert("이미 삭제되었거나 존재하지 않는 글입니다.");
+                }
+            } catch (error) {
+                console.error("Error deleting document: ", error);
+                alert("삭제 중 오류가 발생했습니다.");
+            }
+        };
+    </script>
     <script>
         // PWA 서비스 워커 등록
         if ('serviceWorker' in navigator) {
@@ -1290,7 +1493,7 @@
             galleryItem.appendChild(img);
             galleryGrid.appendChild(galleryItem);
 
-           // 클릭 이벤트: 전체 40장 중 해당 인덱스로 이동
+            // 클릭 이벤트: 전체 40장 중 해당 인덱스로 이동
             galleryItem.addEventListener("click", function () {
                 const modal = document.getElementById("imageModal");
                 // 1. 모달을 눈에 보이지 않게 투명도를 0으로 설정하고 화면에 띄움
@@ -1299,7 +1502,7 @@
                 document.body.style.overflow = 'hidden';
                 if (swiper) {
                     // 2. Swiper 갱신 및 터치한 사진으로 즉시 이동
-                    swiper.update(); 
+                    swiper.update();
                     swiper.slideToLoop(i - 1, 0, false); // 세 번째 인자에 false를 추가하여 불필요한 애니메이션 차단
                 }
                 // 3. Swiper가 슬라이드를 완전히 이동시킬 아주 짧은 시간을 준 뒤 복구 (핵심 수정 사항)
@@ -1307,7 +1510,7 @@
                     modal.style.opacity = "1";
                 }, 50); // 50ms 후 투명도 복구하여 첫 사진 깜빡임 해결
             });
-        } 
+        }
         // 1. 모든 슬라이드를 먼저 생성 (사용자 요청: 9장만 보일 때도 전체 슬라이드 가능하도록)
         for (let i = 1; i <= totalImages; i++) {
             createSwiperSlide(i);
@@ -1337,7 +1540,7 @@
                 // 전후 3장씩 미리 로드하여 스와이프 시 버퍼링 제로화
                 lazyPreloadPrevNext: 3,
                 observer: true,       // 요소의 변경을 감지하여 Swiper 자동 업데이트
-        observeParents: true, // 부모 요소의 변경(display 등)을 감지
+                observeParents: true, // 부모 요소의 변경(display 등)을 감지
                 pagination: {
                     el: ".swiper-pagination",
                     clickable: true,
@@ -1413,33 +1616,16 @@
             document.getElementById("guestbookModal").style.display = "flex";
             document.body.style.overflow = 'hidden'; // 뒤쪽 배경 스크롤 방지
         }
-        // 방명록 모달 닫기
-        function closeGuestbook() {
+        // 방명록 닫기 (이 함수를 window에 붙여야 외부 module에서 접근할 수 있습니다)
+        window.closeGuestbook = function () {
             document.getElementById("guestbookModal").style.display = "none";
             document.body.style.overflow = 'auto'; // 스크롤 복원
-        }
-        // 방명록 등록하기 버튼 클릭 시
-        function submitGuestbook() {
-            const name = document.getElementById("guestName").value;
-            const message = document.getElementById("guestMessage").value;
-            
-            if(!name || !message) {
-                alert("이름과 메시지를 모두 입력해 주세요!");
-                return;
-            }
-            // 임시 성공 알림
-            alert("방명록이 등록되었습니다. 감사합니다!");
-            closeGuestbook();
-            
-            // 입력창 초기화
-            document.getElementById("guestName").value = "";
-            document.getElementById("guestMessage").value = "";
-        }
+        };
+
+        // 기존 submitGuestbook() 하단 스크립트 삭제 (module 안에 재작성됨)
     </script>
 
 </body>
-
-
 
 
 
